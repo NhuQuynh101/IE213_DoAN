@@ -1,7 +1,3 @@
-console.log("Hello ");
-
-//packages
-
 import path from "path";
 import dotenv from "dotenv";
 import express from "express";
@@ -11,7 +7,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 
 dotenv.config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 //Database
 connectDB();
@@ -28,6 +24,6 @@ app.get("/", (req, res) => {
 });
 
 //Routes
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, () => console.log(`🚀 Server đang chạy tại http://localhost:${port}`));
 
 
