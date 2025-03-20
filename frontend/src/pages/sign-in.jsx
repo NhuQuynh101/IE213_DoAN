@@ -31,7 +31,7 @@ const SignIn = () => {
           <h1 className="text-2xl font-bold text-center mb-2">Log in</h1>
           
           <p className="text-center mb-6">
-            Don't have an account? <Link to="/sign-up" className="text-blue-600 hover:underline">Sign up</Link>
+            Don't have an account? <Link to="/sign-up" className="text-[#27B5FC] hover:underline">Sign up</Link>
           </p>
           
           <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
@@ -98,7 +98,7 @@ const SignIn = () => {
             
             <button
               type="submit"
-              className="w-full py-2.5 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="w-full py-2.5 bg-[#27B5FC] text-white rounded-full hover:bg-[#27B5FC]/80 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Log in
             </button>
