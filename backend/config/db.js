@@ -1,12 +1,20 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Kết nối MongoDB
+const url = process.env.MONGO_URI;
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("MongoDB connected");
+        await mongoose.connect(url, {
+            dbName: "Vagabound",
+        });
+        console.log("✅ Kết nối MongoDB thành công!");
+
     } catch (error) {
-        console.log(error);
-        process.exit(1);
+        console.error("❌ Lỗi kết nối MongoDB:", error);
     }
 }
 
