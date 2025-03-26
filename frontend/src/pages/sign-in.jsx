@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
+import { GoogleLogin } from '@react-oauth/google';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +18,19 @@ const SignIn = () => {
     e.preventDefault();
     // Xử lý đăng nhập tại đây
     console.log('Login with:', email, password);
+    alert('Login success');
+  };
+
+  const handleGoogleSuccess = (credentialResponse) => {
+    console.log('Google Login Success:', credentialResponse);
+    // Xử lý đăng nhập Google tại đây
+    alert('Google Login Success');
+  };
+
+  const handleGoogleError = () => {
+    console.log('Google Login Failed');
+    // Xử lý lỗi đăng nhập Google
+    alert('Google Login Failed');
   };
 
   return (
@@ -36,13 +50,20 @@ const SignIn = () => {
           
           <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
             <FaFacebook className="text-blue-600 mr-2" size={20} />
-            <span>Log in with Facebook</span>
+            <span>Đăng nhập bằng Facebook</span>
           </button>
           
-          <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-6 hover:bg-gray-50">
-            <FcGoogle className="mr-2" size={20} />
-            <span>Log in with Google</span>
-          </button>
+          <div className="w-2/3 mx-auto mb-6">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              size="large"
+              width="100%"
+              text="signin_with"
+              shape="pill"
+              logo_alignment="center"
+            />
+          </div>
           
           <div className="flex w-2/3 mx-auto items-center mb-6">
             <div className="flex-grow h-px bg-gray-300"></div>
