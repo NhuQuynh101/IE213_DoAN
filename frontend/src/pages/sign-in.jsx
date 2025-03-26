@@ -4,6 +4,10 @@ import { FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
 import { GoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import { Environment } from '../../environments/environments';
+
+const facebookAppId = Environment.FACEBOOK_APP_ID;
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +37,11 @@ const SignIn = () => {
     alert('Google Login Failed');
   };
 
+  const handleFacebookSuccess = (response) => {
+    console.log('Facebook Login Success:', response);
+    // Xử lý đăng nhập Facebook tại đây
+  };
+
   return (
     <div className="grid grid-cols-2 min-h-screen bg-cover bg-center" 
          style={{ backgroundImage: "url('/images/login/background.png')" }}>
@@ -48,10 +57,19 @@ const SignIn = () => {
             Don't have an account? <Link to="/sign-up" className="text-[#27B5FC] hover:underline">Sign up</Link>
           </p>
           
-          <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
-            <FaFacebook className="text-blue-600 mr-2" size={20} />
-            <span>Đăng nhập bằng Facebook</span>
-          </button>
+          <div className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3">
+            <FacebookLogin
+              appId={facebookAppId}
+              onSuccess={handleFacebookSuccess}
+              className="flex items-center justify-center w-full py-2.5 border border-gray-300 rounded-full hover:bg-gray-50"
+              render={({ onClick }) => (
+                <button onClick={onClick} className="flex items-center justify-center w-full">
+                  <FaFacebook className="text-blue-600 mr-2" size={20} />
+                  <span>Log in with Facebook</span>
+                </button>
+              )}
+            />
+          </div>
           
           <div className="w-2/3 mx-auto mb-6">
             <GoogleLogin
