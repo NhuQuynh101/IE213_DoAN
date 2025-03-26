@@ -23,12 +23,13 @@ const hotelRoomTypeSchema = new mongoose.Schema(
         img: [
             { type: String, default: [] }
         ],
-        area: { type: String, required: true },
-        view: { type: String, required: true },
+        area: { type: String },
+        view: { type: String },
         roomFacilities: [
             { type: String, default: [] }
         ],
-        rooms: [hotelRoomSchema]
+        rooms: [hotelRoomSchema],
+        availableRooms: { type: Number, default: 0 }
     },
     { timestamps: true }
 );
