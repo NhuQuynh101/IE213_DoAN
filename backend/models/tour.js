@@ -11,6 +11,7 @@ const tourSchmema = new mongoose.Schema(
             required: true,
         },
         avgRating: Number,
+        bookings: Number,
         duration: {
             type: String,
             required: true,

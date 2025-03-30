@@ -263,35 +263,201 @@ const getSearchSuggestions = async (req, res) => {
 
 const getSearchResults = async (req, res) => {
     try {
-        const q = req.query.q;
-        const tours = await Tour.aggregate([
-            {
+        const {
+            query,
+            minPrice,
+            maxPrice,
+            category,
+            language,
+            duration,
+            sort,
+        } = req.query;
+
+        let matchStage = {};
+        if (query) {
+            matchStage = {
                 $search: {
                     index: "search_tour",
                     text: {
-                        query: q,
-                        path: ["name", "category", "location", "experiences"],
+                        query: query,
+                        path: ["name", "category", "location"],
+                        fuzzy: {},
                     },
-                    fuzzy: {},
                 },
-            },
+            };
+        }
+
+        let filterStage = { $match: {} };
+
+        if (minPrice) filterStage.$match.price = { $gte: Number(minPrice) };
+        if (maxPrice)
+            filterStage.$match.price = {
+                ...(filterStage.$match.price || {}),
+                $lte: Number(maxPrice),
+            };
+        if (category)
+            filterStage.$match.category = { $in: category.split(",") };
+        if (language)
+            filterStage.$match.languageService = { $in: language.split(",") };
+        if (duration) {
+            switch (duration) {
+                case "0-3": {
+                    filterStage.$match.durationInHours = { $gte: 0, $lte: 3 };
+                    break;
+                }
+                case "3-5": {
+                    filterStage.$match.durationInHours = { $gte: 3, $lte: 5 };
+                    break;
+                }
+                case "5-7": {
+                    filterStage.$match.durationInHours = { $gte: 5, $lte: 7 };
+                    break;
+                }
+                case "1-day": {
+                    filterStage.$match.durationInHours = { $gte: 24, $lte: 48 };
+                    break;
+                }
+                case "2-days-plus": {
+                    filterStage.$match.durationInHours = { $gte: 24 };
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        let sortStage = { score: { $meta: "textScore" } };
+        if (sort === "relevant") sortStage.$sort = { createdAt: -1 };
+        if (sort === "rating") sortStage.$sort = { avgRating: -1 };
+        if (sort === "price") sortStage.$sort = { price: -1 };
+
+        const pageNumber = Number(req.query.page) || 1;
+        const limit = 15;
+        const skip = (pageNumber - 1) * limit;
+
+        const results = await Tour.aggregate([
+            matchStage,
+            filterStage,
+            sortStage,
+            { $skip: skip },
+            { $limit: limit },
             {
                 $project: {
                     name: 1,
                     location: 1,
                     images: 1,
+                    price: 1,
                     category: 1,
                     languageService: 1,
-                    fromPrice: 1,
+                    duration: 1,
+                    score: { $meta: "textScore" },
                 },
             },
         ]);
 
-        res.status(200).json({
-            tours,
+        res.json({
+            tours: results,
+            totalPages: Math.ceil(totalTours / pageSize),
+            page,
+            total: results.length,
         });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Lỗi server" });
+        console.error(error);
+        res.status(500).json({ message: "Lỗi server" });
+    }
+};
+
+const filterTours = async (req, res) => {
+    try {
+        const {
+            category,
+            languageService,
+            minPrice,
+            maxPrice,
+            duration,
+            page,
+            sort,
+        } = req.query;
+
+        let filter = {};
+
+        if (category) {
+            filter.type = { $in: category.split(",") };
+        }
+
+        if (languageService) {
+            filter.languageService = { $in: languageService.split(",") };
+        }
+
+        if (minPrice || maxPrice) {
+            filter.fromPrice = {};
+            if (minPrice) filter.fromPrice.$gte = parseFloat(minPrice);
+            if (maxPrice) filter.fromPrice.$lte = parseFloat(maxPrice);
+        }
+
+        if (duration) {
+            switch (duration) {
+                case "0-3": {
+                    filter.durationInHours = { $gte: 0, $lte: 3 };
+                    break;
+                }
+                case "3-5": {
+                    filter.durationInHours = { $gte: 3, $lte: 5 };
+                    break;
+                }
+                case "5-7": {
+                    filter.durationInHours = { $gte: 5, $lte: 7 };
+                    break;
+                }
+                case "1-day": {
+                    filter.durationInHours = { $gte: 24, $lte: 48 };
+                    break;
+                }
+                case "2-days-plus": {
+                    filter.durationInHours = { $gte: 24 };
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        const pageNumber = Number(page) || 1;
+        const pageSize = 20;
+        const skip = (pageNumber - 1) * pageSize;
+
+        let sortOptions = {};
+        switch (sort) {
+            case "price":
+                sortOptions = { fromPrice: 1 };
+                break;
+            case "rating":
+                sortOptions = { avgRating: -1 };
+                break;
+            case "newest":
+                sortOptions = { createdAt: -1 };
+                break;
+            case "popular":
+                sortOptions = { bookings: -1 };
+                break;
+            default:
+                sortOptions = { bookings: -1 };
+        }
+
+        const tours = await Tour.find(filter)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(pageSize);
+        const totalTours = await Tour.countDocuments(filter);
+
+        res.status(200).json({
+            totalTours,
+            totalPages: Math.ceil(totalTours / pageSize),
+            currentPage: pageNumber,
+            pageSize,
+            data: tours,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi server", error });
     }
 };
