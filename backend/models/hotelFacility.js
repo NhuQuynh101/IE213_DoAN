@@ -8,9 +8,7 @@ const hotelFacilitySchema = new mongoose.Schema(
             required: true
         },
         name: {type: String, required: true},
-        icon: {type: String, required: true}
-    },
-    {timestamps: true}
+    }
 );
 
 const HotelFacility = mongoose.model("HotelFacility", hotelFacilitySchema);
