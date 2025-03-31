@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import facilityRoute from "./routes/facilityRoute.js"
 import cityRoute from "./routes/cityRoute.js"
+import hotelRoute from "./routes/hotelRoute.js";
 
 //Utilities
 import connectDB from "./config/db.js";
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/facility", facilityRoute);
 app.use("/api/city", cityRoute);
+app.use("/api/hotel", hotelRoute);
 
 app.listen(port, () => console.log(`🚀 Server đang chạy tại http://localhost:${port}`));
 
