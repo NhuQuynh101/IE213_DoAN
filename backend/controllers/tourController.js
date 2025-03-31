@@ -327,7 +327,7 @@ const getSearchResults = async (req, res) => {
         }
 
         let sortStage = { score: { $meta: "textScore" } };
-        if (sort === "relevant") sortStage.$sort = { createdAt: -1 };
+        if (sort === "new") sortStage.$sort = { createdAt: -1 };
         if (sort === "rating") sortStage.$sort = { avgRating: -1 };
         if (sort === "price") sortStage.$sort = { price: -1 };
 
