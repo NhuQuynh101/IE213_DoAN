@@ -31,7 +31,7 @@ const AdminSidebar = () => {
         },
         {
             title: "Khách sạn",
-            to: "/admin/manage-hotel",
+            to: "/admin/manage-hotels",
             icon: <FaHotel className="text-lg"></FaHotel>,
         },
     ];
@@ -76,7 +76,7 @@ const AdminSidebar = () => {
                                 to={item.to}
                                 className={`flex gap-3 items-center h-12 px-4 hover:bg-[#f2f2fc] rounded-lg ${
                                     location.pathname === item.to
-                                        ? "bg-[#f2f2fc]" 
+                                        ? "bg-[#f2f2fc]"
                                         : ""
                                 }`}
                             >

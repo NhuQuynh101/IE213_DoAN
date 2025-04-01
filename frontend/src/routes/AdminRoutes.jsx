@@ -3,6 +3,7 @@ import ProtectedRoute from "./ProjectedRoute";
 import AdminLayout from "../pages/Admin/AdminLayout";
 import ManageTours from "../pages/Admin/ManageTours";
 import CreateTour from "../pages/Admin/CreateTour";
+import ManageHotels from "../pages/Admin/ManageHotels";
 
 const AdminRoutes = ({ isAdmin }) => {
     return (
@@ -25,6 +26,7 @@ const AdminRoutes = ({ isAdmin }) => {
                             element={<CreateTour></CreateTour>}
                         ></Route>
                     </Route>
+                    <Route path="/admin/manage-hotels" element={<ManageHotels></ManageHotels>}></Route>
                 </Route>
             </Route>
         </Routes>
