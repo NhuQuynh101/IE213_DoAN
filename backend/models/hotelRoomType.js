@@ -29,7 +29,6 @@ const hotelRoomTypeSchema = new mongoose.Schema(
             { type: String, default: [] }
         ],
         rooms: [hotelRoomSchema],
-        availableRooms: { type: Number, default: 0 }
     },
     { timestamps: true }
 );

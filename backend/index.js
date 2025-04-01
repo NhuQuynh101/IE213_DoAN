@@ -2,12 +2,14 @@ import path from "path";
 import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
-import facilityRoute from "./routes/facilityRoute.js"
-import cityRoute from "./routes/cityRoute.js"
-import tourRoute from './routes/tourRoute.js';
+import facilityRoute from "./routes/facilityRoute.js";
+import cityRoute from "./routes/cityRoute.js";
+import tourRoute from "./routes/tourRoute.js";
+
+import hotelRoute from "./routes/hotelRoute.js";
+
 //Utilities
 import connectDB from "./config/db.js";
-
 dotenv.config();
 const port = process.env.PORT || 3000;
 
@@ -27,7 +29,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/facility", facilityRoute);
 app.use("/api/city", cityRoute);
+
 app.use("api/tour", tourRoute);
-app.listen(port, () => console.log(`🚀 Server đang chạy tại http://localhost:${port}`));
 
-
+app.use("/api/hotel", hotelRoute);
+app.listen(port, () =>
+    console.log(`🚀 Server đang chạy tại http://localhost:${port}`)
+);

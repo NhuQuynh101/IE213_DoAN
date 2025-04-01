@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/listCity", listCity);
 router.post("/addCity", addCity);
-router.post("/popularPlace", addPopularPlace);
+router.post("/:cityId/add-popular-place", addPopularPlace);
 router.delete("/removeCity/:cityId", removeCity);
 router.delete("/removePopularPlace/:cityId/:placeId", removePopularPlace);
 

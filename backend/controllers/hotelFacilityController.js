@@ -117,10 +117,47 @@ const removeFacility = async(req, res) => {
     }
 }
 
+const addMultipleFacilities = async (req, res) => {
+    try {
+        const { categoryName, facilityNames } = req.body;
+
+        if (!categoryName || !Array.isArray(facilityNames) || facilityNames.length === 0) {
+            return res.status(400).json({ error: "Dữ liệu không hợp lệ" });
+        }
+        let category = await HotelCategory.findOne({ name: categoryName });
+        if (!category) {
+            category = new HotelCategory({ name: categoryName });
+            await category.save();
+        }
+
+        const existingFacilities = await HotelFacility.find({
+            category: category._id,
+            name: { $in: facilityNames }
+        });
+        const existingNames = existingFacilities.map(facility => facility.name);
+        const newFacilities = facilityNames.filter(name => !existingNames.includes(name));
+
+        const facilitiesToInsert = newFacilities.map(name => ({
+            category: category._id,
+            name
+        }));
+
+        if (facilitiesToInsert.length > 0) {
+            await HotelFacility.insertMany(facilitiesToInsert);
+        }
+
+        res.status(201).json({ message: "Thêm thành công", added: facilitiesToInsert });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Lỗi server" });
+    }
+};
+
 export {
     listFacility,
     groupFacilityByCategory,
     listFacilityByCategory,
     addFacility,
     removeFacility,
+    addMultipleFacilities
 };
