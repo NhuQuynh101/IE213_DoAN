@@ -27,11 +27,11 @@ const ticketSchema = new mongoose.Schema(
             location: String,
         },
         cancellationPolicy: {
-            isReschedule: bool,
+            isReschedule: Boolean,
             reschedulePolicy: String,
-            isRefund: bool,
+            isRefund: Boolean,
             refundPolicy: {
-                refundPercentage: [{ daysBefore: Numbers, percent: Number }],
+                refundPercentage: [{ daysBefore: Number, percent: Number }],
                 description: String,
             },
         },
