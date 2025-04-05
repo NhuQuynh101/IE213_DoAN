@@ -5,3 +5,9 @@
 input {
     outline: none;
 }
+
+.ant-select-selector {
+    border: none !important;
+    
+}
+

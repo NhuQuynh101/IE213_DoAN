@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const hotelRoomSchema = new mongoose.Schema(
     {
         bedType: { type: String, required: true },
-        serveBreakfast: { type: Boolean, default: false },
+        serveBreakfast: { type: String},
         maxOfGuest: { type: Number, required: true },
         cancellationPolicy: {
             refund: { type: String, required: true },

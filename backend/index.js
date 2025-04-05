@@ -1,6 +1,7 @@
 import path from "path";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import facilityRoute from "./routes/facilityRoute.js";
 import cityRoute from "./routes/cityRoute.js";
@@ -18,6 +19,12 @@ connectDB();
 
 //App
 const app = express();
+
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

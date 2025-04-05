@@ -5,7 +5,7 @@ const AdminLayout = () => {
     return (
         <div className="flex">
             <AdminSidebar />
-            <main className="flex-1 p-5">
+            <main className="flex-1">
                 <Outlet />
             </main>
         </div>
