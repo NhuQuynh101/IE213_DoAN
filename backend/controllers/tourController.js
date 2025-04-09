@@ -2,7 +2,7 @@ import Tour from "../models/tour.js";
 import Ticket from "../models/ticket.js";
 import City from "../models/city.js";
 
-const addTour = async (req, res) => {
+const createTour = async (req, res) => {
     try {
         const {
             name,
@@ -367,7 +367,7 @@ const getSearchResults = async (req, res) => {
     }
 };
 
-const filterTours = async (req, res) => {
+const getTours = async (req, res) => {
     try {
         const {
             category,
@@ -376,6 +376,7 @@ const filterTours = async (req, res) => {
             maxPrice,
             duration,
             page,
+            limit,
             sort,
         } = req.query;
 
@@ -423,25 +424,27 @@ const filterTours = async (req, res) => {
         }
 
         const pageNumber = Number(page) || 1;
-        const pageSize = 20;
+        const pageSize = Number(limit) || 15;
         const skip = (pageNumber - 1) * pageSize;
 
         let sortOptions = {};
-        switch (sort) {
-            case "price":
-                sortOptions = { fromPrice: 1 };
-                break;
-            case "rating":
-                sortOptions = { avgRating: -1 };
-                break;
-            case "newest":
-                sortOptions = { createdAt: -1 };
-                break;
-            case "popular":
-                sortOptions = { bookings: -1 };
-                break;
-            default:
-                sortOptions = { bookings: -1 };
+        if (sort) {
+            switch (sort) {
+                case "price":
+                    sortOptions = { fromPrice: 1 };
+                    break;
+                case "rating":
+                    sortOptions = { avgRating: -1 };
+                    break;
+                case "newest":
+                    sortOptions = { createdAt: -1 };
+                    break;
+                case "popular":
+                    sortOptions = { bookings: -1 };
+                    break;
+                default:
+                    sortOptions = { bookings: -1 };
+            }
         }
 
         const tours = await Tour.find(filter)
@@ -458,6 +461,37 @@ const filterTours = async (req, res) => {
             data: tours,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Lỗi server", error });
     }
 };
+
+const getTourDetail = async (req, res) => {
+    try {
+        const { tourId } = req.params;
+        const tour = await Tour.findById(tourId);
+
+        if (!tour) {
+            return res.status(404).json({ message: "Tour không tồn tại" });
+        }
+
+        const tickets = await Ticket.find({ _id: { $in: tour.tickets } });
+        res.json({ tour, tickets });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Lỗi server", error });
+    }
+};
+
+export {
+    createTour,
+    addTicketToTour,
+    updateTicketInTour,
+    deleteTicketFromTour,
+    updateTour,
+    deleteTour,
+    getSearchSuggestions,
+    getSearchResults,
+    getTours,
+    getTourDetail
+}

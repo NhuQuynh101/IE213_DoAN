@@ -14,9 +14,20 @@ dotenv.config({ path: process.cwd() + '/.env' });
 import path from "path";
 import facilityRoute from "./routes/facilityRoute.js"
 import cityRoute from "./routes/cityRoute.js"
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import facilityRoute from "./routes/facilityRoute.js";
+import cityRoute from "./routes/cityRoute.js";
+import tourRoute from "./routes/tourRoute.js";
+
 import hotelRoute from "./routes/hotelRoute.js";
 import adminAuthRoute from "./routes/adminAuthRoute.js";
 
+//Utilities
+import connectDB from "./config/db.js";
+dotenv.config();
 const port = process.env.PORT || 3000;
 
 //Database
@@ -27,6 +38,12 @@ initializeAdmin();
 
 //App
 const app = express();
+
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,8 +67,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminAuthRoute);
 app.use("/api/facility", facilityRoute);
 app.use("/api/city", cityRoute);
+
+app.use("api/tour", tourRoute);
+
 app.use("/api/hotel", hotelRoute);
-
-app.listen(port, () => console.log(`🚀 Server đang chạy tại http://localhost:${port}`));
-
-
+app.listen(port, () =>
+    console.log(`🚀 Server đang chạy tại http://localhost:${port}`)
+);
