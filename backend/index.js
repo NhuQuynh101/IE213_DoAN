@@ -14,19 +14,12 @@ dotenv.config({ path: process.cwd() + '/.env' });
 import path from "path";
 import facilityRoute from "./routes/facilityRoute.js"
 import cityRoute from "./routes/cityRoute.js"
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import facilityRoute from "./routes/facilityRoute.js";
-import cityRoute from "./routes/cityRoute.js";
 import tourRoute from "./routes/tourRoute.js";
 
 import hotelRoute from "./routes/hotelRoute.js";
 import adminAuthRoute from "./routes/adminAuthRoute.js";
 
 //Utilities
-import connectDB from "./config/db.js";
 dotenv.config();
 const port = process.env.PORT || 3000;
 
