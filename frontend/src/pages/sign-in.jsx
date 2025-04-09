@@ -37,17 +37,13 @@ const SignIn = () => {
     alert('Google Login Failed');
   };
 
-  const handleFacebookSuccess = (response) => {
-    console.log('Facebook Login Success:', response);
-    // Xử lý đăng nhập Facebook tại đây
-  };
 
   return (
     <div className="grid grid-cols-2 min-h-screen bg-cover bg-center" 
          style={{ backgroundImage: "url('/images/login/background.png')" }}>
       <div></div> {/* Cột trái trống */}
       <div className="flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-[700px] relative p-8 mx-auto">
+        <div className="bg-white rounded-lg shadow-xl w-full max-w-[700px] h-full relative p-8 mx-auto">
           
          
           
@@ -57,19 +53,6 @@ const SignIn = () => {
             Don't have an account? <Link to="/sign-up" className="text-[#27B5FC] hover:underline">Sign up</Link>
           </p>
           
-          <div className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3">
-            <FacebookLogin
-              appId={facebookAppId}
-              onSuccess={handleFacebookSuccess}
-              className="flex items-center justify-center w-full py-2.5 border border-gray-300 rounded-full hover:bg-gray-50"
-              render={({ onClick }) => (
-                <button onClick={onClick} className="flex items-center justify-center w-full">
-                  <FaFacebook className="text-blue-600 mr-2" size={20} />
-                  <span>Log in with Facebook</span>
-                </button>
-              )}
-            />
-          </div>
           
           <div className="w-2/3 mx-auto mb-6">
             <GoogleLogin
