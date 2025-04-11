@@ -8,14 +8,14 @@ const url = process.env.MONGO_URI;
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(url, {
-            dbName: "Vagabound",
-        });
+        await mongoose.connect(url,
+            { dbName: "Vagabound" }
+        );
         console.log("✅ Kết nối MongoDB thành công!");
 
     } catch (error) {
         console.error("❌ Lỗi kết nối MongoDB:", error);
     }
-}
+};
 
 export default connectDB;

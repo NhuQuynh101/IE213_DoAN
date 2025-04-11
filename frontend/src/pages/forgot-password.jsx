@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebook } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
+import { GoogleLogin } from '@react-oauth/google';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +10,16 @@ const ForgotPassword = () => {
         e.preventDefault();
         // Xử lý gửi yêu cầu đặt lại mật khẩu
         console.log('Reset password for:', email);
+    };
+
+    const handleGoogleSuccess = (credentialResponse) => {
+        console.log('Google Login Success:', credentialResponse);
+        // Xử lý đăng nhập Google tại đây
+    };
+
+    const handleGoogleError = () => {
+        console.log('Google Login Failed');
+        // Xử lý lỗi đăng nhập Google
     };
 
     return (
@@ -66,10 +76,18 @@ const ForgotPassword = () => {
                         <span>Log in with Facebook</span>
                     </button>
                     
-                    <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
-                        <FcGoogle className="mr-2" size={20} />
-                        <span>Log in with Google</span>
-                    </button>
+                    {/* Thay thế nút Google cũ bằng GoogleLogin component */}
+                    <div className="w-2/3 mx-auto mb-3">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                            size="large"
+                            width="100%"
+                            text="signin_with"
+                            shape="pill"
+                            logo_alignment="center"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

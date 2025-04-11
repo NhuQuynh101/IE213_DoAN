@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
+import { GoogleLogin } from '@react-oauth/google';
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -11,6 +11,16 @@ const SignUp = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
+    };
+
+    const handleGoogleSuccess = (credentialResponse) => {
+        console.log('Google Sign Up Success:', credentialResponse);
+        // Xử lý đăng ký Google tại đây
+    };
+
+    const handleGoogleError = () => {
+        console.log('Google Sign Up Failed');
+        // Xử lý lỗi đăng ký Google
     };
 
     const handleSubmit = (e) => {
@@ -32,15 +42,18 @@ const SignUp = () => {
                         Already have an account? <Link to="/sign-in" className="text-[#27B5FC] hover:underline">Log in</Link>
                     </p>
                     
-                    <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
-                        <FaFacebook className="text-blue-600 mr-2" size={20} />
-                        <span>Sign up with Facebook</span>
-                    </button>
                     
-                    <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-6 hover:bg-gray-50">
-                        <FcGoogle className="mr-2" size={20} />
-                        <span>Sign up with Google</span>
-                    </button>
+                    <div className="w-2/3 mx-auto mb-6">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                            size="large"
+                            width="100%"
+                            text="signup_with"
+                            shape="pill"
+                            logo_alignment="center"
+                        />
+                    </div>
                     
                     <div className="flex w-2/3 mx-auto items-center mb-6">
                         <div className="flex-grow h-px bg-gray-300"></div>
