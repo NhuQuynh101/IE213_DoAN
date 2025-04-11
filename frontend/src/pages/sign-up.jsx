@@ -42,10 +42,6 @@ const SignUp = () => {
                         Already have an account? <Link to="/sign-in" className="text-[#27B5FC] hover:underline">Log in</Link>
                     </p>
                     
-                    <button className="flex items-center mx-auto justify-center w-2/3 py-2.5 border border-gray-300 rounded-full mb-3 hover:bg-gray-50">
-                        <FaFacebook className="text-blue-600 mr-2" size={20} />
-                        <span>Sign up with Facebook</span>
-                    </button>
                     
                     <div className="w-2/3 mx-auto mb-6">
                         <GoogleLogin

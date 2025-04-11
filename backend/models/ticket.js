@@ -17,21 +17,18 @@ const ticketSchema = new mongoose.Schema(
         maxPerBooking: {
             type: Number,
         },
-        overview: {
-            included: String,
-            excluded: String,
-        },
+        overview: String,
         voucherValidity: String,
         redemptionPolicy: {
             method: String,
             location: String,
         },
         cancellationPolicy: {
-            isReschedule: bool,
+            isReschedule: Boolean,
             reschedulePolicy: String,
-            isRefund: bool,
+            isRefund: Boolean,
             refundPolicy: {
-                refundPercentage: [{ daysBefore: Numbers, percent: Number }],
+                refundPercentage: [{ daysBefore: Number, percent: Number }],
                 description: String,
             },
         },

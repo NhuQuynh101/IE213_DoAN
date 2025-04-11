@@ -4,8 +4,8 @@ const hotelSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
         img: [{ type: String, default: [] }],
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
+        lat: { type: Number, default: 0 },
+        lng: { type: Number, default: 0 },
         address: { type: String, required: true },
         city: {
             type: mongoose.Schema.Types.ObjectId,
@@ -15,6 +15,7 @@ const hotelSchema = new mongoose.Schema(
         rooms: { type: Number, required: true },
         averageRating: { type: Number, default: 0 },
         description: { type: String, required: true },
+
         serviceFacilities: [
             {
                 categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "HotelCategory" },
@@ -23,18 +24,18 @@ const hotelSchema = new mongoose.Schema(
                 ],
             }
         ],
-        timeCheckInOut: {
+
+        policies: {
             timeCheckin: { type: String, required: true },
             timeCheckout: { type: String, required: true },
+            checkinPolicy: { type: String },
+            childrenPolicy: { type: String },
+            mandatoryFees: { type: String },
+            otherFees: { type: String },
+            FoodDrinks: { type: String },
+            allowPet: { type: String },
         },
-        childrenPolicy: { type: String, required: true },
-        checkinPolicy: { type: String, required: true },
-        othersPolicies: [
-            {
-                name: { type: String, required: true },
-                content: { type: String, required: true },
-            },
-        ],
+
         price: { type: Number, required: true },
         roomTypes: [
             {

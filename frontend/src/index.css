@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input, textarea {
+    outline: none;
+}
+
+.ant-select-selector {
+    border: none !important;
+}
+
+.ql-editor {
+    font-size: 16px; 
+}
