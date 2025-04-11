@@ -7,7 +7,6 @@ import AdminRoutes from './routes/AdminRoutes';
 const isAdmin = true
 
 function App() {
-  
   return (
     <BrowserRouter>
       <Routes>

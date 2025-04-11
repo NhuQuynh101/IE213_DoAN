@@ -11,7 +11,11 @@ const customIcon = new L.Icon({
 });
 
 const MapPicker = ({ form }) => {
-    const [location, setLocation] = useState({ lat: 21.0285, lng: 105.8542 });
+    const [location, setLocation] = useState(() => {
+        const lat = parseFloat(form.getValues("lat")) || 21.0285;
+        const lng = parseFloat(form.getValues("lng")) || 105.8542;
+        return { lat, lng };
+    });
 
     const handleSearchAddress = async (e) => {
         e.preventDefault();
@@ -37,7 +41,6 @@ const MapPicker = ({ form }) => {
 
     const MapEventsAndCenterUpdater = () => {
         const map = useMap();
-        
         useMapEvents({
             click: (e) => {
                 const lat = e.latlng.lat;

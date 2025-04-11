@@ -15,7 +15,7 @@ const hotelSchema = new mongoose.Schema(
         rooms: { type: Number, required: true },
         averageRating: { type: Number, default: 0 },
         description: { type: String, required: true },
-        
+
         serviceFacilities: [
             {
                 categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "HotelCategory" },

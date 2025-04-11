@@ -1,49 +1,34 @@
 import React, { useState } from "react";
 import { Modal, Select } from "antd";
-import RoomModal from '../components/RoomModal';
 const { Option } = Select;
 
 
-const RoomTypeModal = ({ visible, onCancel, onOk, setValue, getValues }) => {
-  const [name, setName] = useState("");
-  const [area, setArea] = useState(0);
-  const [view, setView] = useState("");
-  const [facility, setFacility] = useState();
-  const [rooms, setRooms] = useState([]);
+const RoomTypeModal = ({ visible, onCancel, onOk, roomTypeData = {} }) => {
+  const [name, setName] = useState(roomTypeData.name || "");
+  const [area, setArea] = useState(roomTypeData.area || 0);
+  const [view, setView] = useState(roomTypeData.view || "");
+  const [facility, setFacility] = useState(roomTypeData.facility || []);
   const [showRoomTypeError, setShowRoomTypeError] = useState(false);
-  const [isRoomModalVisible, setIsRoomModalVisible] = useState(false);
 
   const handleSelectChange = (value) => {
     setFacility(value);
   };
-
-  const handleRoomModalSubmit = (newRoom) => {
-    const prevRooms = rooms || [];
-    setRooms([...prevRooms, newRoom]);
-    setIsRoomModalVisible(false);
-  }
 
   const resetForm = () => {
     setName("");
     setArea(0);
     setView("");
     setFacility([]);
-    setRooms([]);
     setShowRoomTypeError(false);
   }
 
   const renderRoomError = () => {
-    if (name.trim() === "" || area === 0 || view === "" || facility == null) {
-      return <p className="text-red-500">Vui lòng điền đầy đủ thông tin</p>;
-    }
-    if (rooms.length === 0) {
-      return <p className="text-red-500">Vui lòng thêm ít nhất một phòng</p>;
-    }
+    return <p className="text-red-500">Vui lòng điền đầy đủ thông tin</p>;
   }
 
   const handleSubmit = () => {
 
-    if (rooms.length === 0) {
+    if (name.trim() === "" || area === 0 || view === "" || facility == null) {
       setShowRoomTypeError(true);
       return;
     }
@@ -53,7 +38,6 @@ const RoomTypeModal = ({ visible, onCancel, onOk, setValue, getValues }) => {
       area: area,
       view: view,
       roomFacilities: facility,
-      rooms: rooms,
     };
     onOk(newRoomType);
     resetForm();
@@ -135,32 +119,6 @@ const RoomTypeModal = ({ visible, onCancel, onOk, setValue, getValues }) => {
           ))}
         </Select>
       </div>
-
-      <div>
-        {rooms.length > 0 && <h3 className="font-semibold text-[16px] mb-3">Danh sách phòng</h3>}
-        {rooms.map((room, index) => (
-          <div key={index} className="p-4 border rounded mb-4 space-y-1">
-            <p className="">Loại giường: {room.bedType}</p>
-            <p className="">Bữa sáng: {room.serveBreakfast}</p>
-            <p className="">Số khách tối đa: {room.maxOfGuest}</p>
-            <p className="">Giá phòng: {room.price}</p>
-          </div>
-        ))}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => {setIsRoomModalVisible(true)}}
-        className="border-[1.5px] border-blue-500 border-dashed text-blue-500 font-medium text-[14px] p-[5px] rounded mb-5"
-      >
-        + Thêm phòng
-      </button>
-
-      <RoomModal
-        visible={isRoomModalVisible}
-        onCancel={() => setIsRoomModalVisible(false)}
-        onOk={handleRoomModalSubmit}
-      />
       {showRoomTypeError && renderRoomError()}
     </Modal>
   );

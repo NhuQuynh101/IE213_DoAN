@@ -5,6 +5,7 @@ import ManageTours from "../pages/Admin/ManageTours";
 import CreateTour from "../pages/Admin/CreateTour";
 import ManageHotels from "../pages/Admin/ManageHotels";
 import CreateHotel from "../pages/Admin/CreateHotel";
+import Profile from "../pages/Admin/Profile";
 
 const AdminRoutes = ({ isAdmin }) => {
     return (
@@ -18,11 +19,23 @@ const AdminRoutes = ({ isAdmin }) => {
                 }
             >
                 <Route element={<AdminLayout></AdminLayout>}>
+<<<<<<< HEAD
                     <Route path="admin/manage-tours">
                         <Route
                             index
                             element={<ManageTours></ManageTours>}
                         ></Route>
+=======
+                    <Route
+                        path="admin/profile"
+                        element={<Profile />}
+                    />
+                    
+                    <Route
+                        path="admin/manage-tours"
+                        element={<ManageTours></ManageTours>}
+                    >
+>>>>>>> 8b75e29cd12289cbd6442eb551f245c28d273cca
                         <Route
                             path="create-tour"
                             element={<CreateTour></CreateTour>}
