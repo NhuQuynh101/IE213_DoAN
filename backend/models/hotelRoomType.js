@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const hotelRoomSchema = new mongoose.Schema(
     {
         bedType: { type: String, required: true },
-        serveBreakfast: { type: Boolean, default: false },
+        serveBreakfast: { type: String},
         maxOfGuest: { type: Number, required: true },
+        numberOfRoom: { type: Number, required: true },
         cancellationPolicy: {
             refund: { type: String, required: true },
             day: { type: Number, required: true },
@@ -23,12 +24,12 @@ const hotelRoomTypeSchema = new mongoose.Schema(
         img: [
             { type: String, default: [] }
         ],
-        area: { type: String, required: true },
-        view: { type: String, required: true },
+        area: { type: String },
+        view: { type: String },
         roomFacilities: [
             { type: String, default: [] }
         ],
-        rooms: [hotelRoomSchema]
+        rooms: [hotelRoomSchema],
     },
     { timestamps: true }
 );
