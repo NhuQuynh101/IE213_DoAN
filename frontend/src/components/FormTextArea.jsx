@@ -1,36 +1,34 @@
-const FormInput = ({
+const FormTextArea = ({
     label,
-    type = "text",
     name,
     register,
     errors,
     placeholder,
     validationRules = {},
     className = "",
+    row = 3,
     isSmall = false,
-    defaulValue = undefined,
 }) => {
     return (
         <div className={className}>
             <label
-                className={`block ${
-                    isSmall ? "mb-1" : "mb-2 text-base"
-                } font-medium `}
+                className={`block font-medium mb-2 ${
+                    isSmall ? "" : "text-base"
+                }`}
             >
                 {label}{" "}
                 {validationRules.required && (
                     <span className="text-red-500">*</span>
                 )}
             </label>
-            <input
-                type={type}
+            <textarea
+                row={row}
                 placeholder={placeholder}
                 {...register(name, validationRules)}
-                className={`w-full border ${isSmall ? "p-1" : "p-2"} rounded ${
+                className={`w-full border p-2 rounded ${
                     errors[name] ? "border-red-500" : "border-gray-300"
                 }`}
-                value={defaulValue}
-            ></input>
+            ></textarea>
             {errors[name] && (
                 <p className="text-red-500 text-sm mt-1">
                     {errors[name]?.message}
@@ -40,4 +38,4 @@ const FormInput = ({
     );
 };
 
-export default FormInput;
+export default FormTextArea;

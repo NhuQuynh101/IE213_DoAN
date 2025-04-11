@@ -18,10 +18,11 @@ const AdminRoutes = ({ isAdmin }) => {
                 }
             >
                 <Route element={<AdminLayout></AdminLayout>}>
-                    <Route
-                        path="admin/manage-tours"
-                        element={<ManageTours></ManageTours>}
-                    >
+                    <Route path="admin/manage-tours">
+                        <Route
+                            index
+                            element={<ManageTours></ManageTours>}
+                        ></Route>
                         <Route
                             path="create-tour"
                             element={<CreateTour></CreateTour>}

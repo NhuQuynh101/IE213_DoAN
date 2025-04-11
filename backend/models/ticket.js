@@ -17,10 +17,7 @@ const ticketSchema = new mongoose.Schema(
         maxPerBooking: {
             type: Number,
         },
-        overview: {
-            included: String,
-            excluded: String,
-        },
+        overview: String,
         voucherValidity: String,
         redemptionPolicy: {
             method: String,

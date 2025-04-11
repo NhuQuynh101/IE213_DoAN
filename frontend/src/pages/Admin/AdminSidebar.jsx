@@ -4,8 +4,6 @@ import {
     FaMoneyBillWave,
     FaHotel,
     FaUmbrellaBeach,
-    FaBars,
-    FaTimes,
     FaUser,
 } from "react-icons/fa";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -38,7 +36,7 @@ const AdminSidebar = () => {
 
     return (
         <div
-            className={`h-screen relative border-r text-[#1a202e] transition-all duration-300 ${
+            className={`h-screen relative text-[#1a202e] transition-all duration-300 ${
                 isCollapsed ? "w-16" : "w-64"
             }`}
         >
