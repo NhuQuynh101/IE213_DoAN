@@ -54,7 +54,6 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
-
 // API routes
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminAuthRoute);
