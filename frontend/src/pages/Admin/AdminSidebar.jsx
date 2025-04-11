@@ -10,9 +10,15 @@ import {
 } from "react-icons/fa";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { TbDeviceAnalytics } from "react-icons/tb";
+
 const AdminSidebar = () => {
     const location = useLocation();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [user, setUser] = useState({
+        firstName: "Admin",
+        lastName: "User",
+        role: "Administrator"
+    });
     const MENU_ITEMS = [
         {
             title: "Dashboard",
@@ -46,12 +52,14 @@ const AdminSidebar = () => {
                 {!isCollapsed && <h1>Vagabond</h1>}
             </div>
             {!isCollapsed && (
-                <div className="flex flex-col items-center justify-center py-4">
-                    <FaUser className="w-10 h-10"></FaUser>
-                    <div className="mt-2 text-center">
-                        <p className="text-sm font-medium">Admin</p>
-                        <p className="text-xs text-gray-500">admin@gmail.com</p>
-                    </div>
+                <div className="flex flex-col items-center">
+                    <Link to="/admin/profile" className="flex flex-col items-center hover:opacity-80 transition-opacity">
+                        <FaUser className="w-10 h-10"></FaUser>
+                        <div className="mt-2 text-center">
+                            <p className="text-sm font-medium text-gray-700">{user?.firstName} {user?.lastName}</p>
+                            <p className="text-xs text-gray-500">{user?.role}</p>
+                        </div>
+                    </Link>
                 </div>
             )}
             <button
