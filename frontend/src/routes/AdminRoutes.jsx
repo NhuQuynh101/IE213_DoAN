@@ -5,6 +5,7 @@ import ManageTours from "../pages/Admin/ManageTours";
 import CreateTour from "../pages/Admin/CreateTour";
 import ManageHotels from "../pages/Admin/ManageHotels";
 import CreateHotel from "../pages/Admin/CreateHotel";
+import Profile from "../pages/Admin/Profile";
 
 const AdminRoutes = ({ isAdmin }) => {
     return (
@@ -18,6 +19,11 @@ const AdminRoutes = ({ isAdmin }) => {
                 }
             >
                 <Route element={<AdminLayout></AdminLayout>}>
+                    <Route
+                        path="admin/profile"
+                        element={<Profile />}
+                    />
+                    
                     <Route
                         path="admin/manage-tours"
                         element={<ManageTours></ManageTours>}
