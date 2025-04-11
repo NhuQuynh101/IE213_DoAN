@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Select } from "antd";
-import { set } from "mongoose";
 const { Option } = Select;
 
 const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
   const [bedType, setBedType] = useState(roomData.bedType || "");
   const [serveBreakfast, setServeBreakfast] = useState(roomData.serveBreakfast || "");
   const [maxOfGuest, setMaxOfGuest] = useState(roomData.maxOfGuest || 0);
+  const [numberOfRoom, setNumberOfRoom] = useState(roomData.numberOfRoom || 0);
   const [price, setPrice] = useState(roomData.price || 0);
   const [cancellationPolicy, setCancellationPolicy] = useState(roomData.cancellationPolicy || {
     refund: "",
@@ -20,6 +20,7 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
     setBedType("");
     setServeBreakfast("");
     setMaxOfGuest(0);
+    setNumberOfRoom(0);
     setPrice(0);
     setCancellationPolicy({
       refund: "",
@@ -31,17 +32,14 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
   };
 
   const renderRoomError = () => {
-    if (bedType.trim() === "" || maxOfGuest === 0 || price === 0) {
+    if (bedType.trim() === "" || maxOfGuest === 0 || price === 0 || numberOfRoom === 0) {
       return <p className="text-red-500">Vui lòng điền đầy đủ thông tin</p>;
-    }
-    if (cancellationPolicy.refund.trim() === "" || cancellationPolicy.day === "" || cancellationPolicy.percentBeforeDay === "" || cancellationPolicy.percentAfterDay === "") {
-      return <p className="text-red-500">Vui lòng điền đầy đủ thông tin chính sách huỷ phòng</p>;
     }
   }
 
   const handleSubmit = () => {
     
-    if (bedType.trim() === "" || maxOfGuest === 0 || price === 0 || cancellationPolicy.refund.trim() === "" || cancellationPolicy.day === "" || cancellationPolicy.percentBeforeDay === "" || cancellationPolicy.percentAfterDay === "") {
+    if (bedType.trim() === "" || maxOfGuest === 0 || numberOfRoom === 0 || price === 0) {
       setShowRoomError(true);
       return;
     }
@@ -50,6 +48,7 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
       bedType: bedType,
       serveBreakfast: serveBreakfast,
       maxOfGuest: maxOfGuest,
+      numberOfRoom: numberOfRoom,
       price: price,
       cancellationPolicy: {
         refund: cancellationPolicy.refund,
@@ -71,7 +70,10 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
     <Modal open={visible} onCancel={handleCancel} onOk={handleSubmit}>
       <p className="text-[18px] font-semibold mb-3">Thêm phòng</p>
       <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">Tên phòng</label>
+        <label className="text-[14px]">
+          Tên phòng
+          <span className="text-red-500">*</span>
+        </label>
         <input
           type="text"
           value={bedType}
@@ -99,7 +101,10 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">Số khách tối đa</label>
+        <label className="text-[14px]">
+          Số khách tối đa
+          <span className="text-red-500">*</span>
+        </label>
         <input
           type="number"
           value={maxOfGuest}
@@ -111,7 +116,25 @@ const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
       </div>
 
       <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">Giá phòng (VND)</label>
+        <label className="text-[14px]">
+          Số lượng phòng
+          <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          value={numberOfRoom}
+          onChange={(e) => {
+            setNumberOfRoom(e.target.value);
+          }}
+          className="flex-1 border border-gray-300 rounded p-[5px] ml-2"
+        />
+      </div>
+
+      <div className="flex items-center gap-3 mb-3">
+        <label className="text-[14px]">
+          Giá phòng (VND)
+          <span className="text-red-500">*</span>
+        </label>
         <input
           type="number"
           value={price}

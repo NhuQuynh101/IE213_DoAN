@@ -9,15 +9,15 @@ const listHotel = async (req, res) => {
     try{
         const hotels = await Hotel.find({}).populate({
             path: "city",
-            select: "name", // Lấy tên thành phố
+            select: "name",
         }).populate({
             path: "roomTypes",
         }).populate({
             path: "serviceFacilities.categoryId",
-            select: "name", // Lấy tên danh mục dịch vụ
+            select: "name",
         }).populate({
             path: "serviceFacilities.items",
-            select: "name", // Lấy tên từng tiện ích của khách sạn
+            select: "name",
         });
         res.status(200).json(hotels);
     }
@@ -252,9 +252,9 @@ const updateRoomType = async (req, res) => {
 const addRoom = async(req, res) => {
     try{
         const { roomTypeId } = req.params;
-        const { bedType,  serveBreakfast, maxOfGuest , cancellationPolicy, price} = req.body;
+        const { bedType,  serveBreakfast, maxOfGuest, numberOfRoom , cancellationPolicy, price} = req.body;
     
-        if(!bedType || !maxOfGuest || !cancellationPolicy || !price)
+        if(!bedType || !maxOfGuest || !numberOfRoom || !cancellationPolicy || !price)
             return res.status(400).json("Thiếu thông tin bắt buộc");
     
         const roomType = await HotelRoomType.findById(roomTypeId);
@@ -262,8 +262,9 @@ const addRoom = async(req, res) => {
             return res.status(400).json({ error: "Loại phòng không tồn tại" });
     
         const newRoom = {
-            bedType, serveBreakfast: serveBreakfast || false,
+            bedType, serveBreakfast: serveBreakfast,
             maxOfGuest: Number(maxOfGuest),
+            numberOfRoom: Number(numberOfRoom),
             cancellationPolicy, price: Number(price),
         };
     
@@ -280,7 +281,7 @@ const addRoom = async(req, res) => {
 const updateRoom = async (req, res) => {
     try {
         const { hotelId, roomTypeId, roomId } = req.params;
-        const { bedType, serveBreakfast, maxOfGuest, cancellationPolicy, price } = req.body;
+        const { bedType, serveBreakfast, maxOfGuest, numberOfRoom, cancellationPolicy, price } = req.body;
 
         const hotel = await Hotel.findById(hotelId);
         if (!hotel) return res.status(404).json({ error: "Khách sạn không tồn tại" });
@@ -293,6 +294,7 @@ const updateRoom = async (req, res) => {
         room.bedType = bedType || room.bedType;
         room.serveBreakfast = serveBreakfast !== undefined ? serveBreakfast : room.serveBreakfast;
         room.maxOfGuest = maxOfGuest !== undefined ? Number(maxOfGuest) : room.maxOfGuest;
+        room.numberOfRoom = numberOfRoom !== undefined ? Number(numberOfRoom) : room.numberOfRoom;
         room.cancellationPolicy = cancellationPolicy || room.cancellationPolicy;
         room.price = price !== undefined ? Number(price) : room.price;
 

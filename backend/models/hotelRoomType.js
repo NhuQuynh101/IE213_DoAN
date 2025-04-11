@@ -5,6 +5,7 @@ const hotelRoomSchema = new mongoose.Schema(
         bedType: { type: String, required: true },
         serveBreakfast: { type: String},
         maxOfGuest: { type: Number, required: true },
+        numberOfRoom: { type: Number, required: true },
         cancellationPolicy: {
             refund: { type: String, required: true },
             day: { type: Number, required: true },

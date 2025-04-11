@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { IoSearch } from "react-icons/io5";
 import { IoMdAddCircleOutline, IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { useGetHotelsQuery } from '../../redux/api/hotelApiSlice';
 
 const ManageHotels = () => {
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
-    const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);
+    const { data: hotels = [], refetch } = useGetHotelsQuery();
 
-    const fetchData = (value) => {
-        fetch("http://localhost:3000/api/hotel/")
-            .then((response) => response.json())
-            .then((json) => {
-                const results = json.filter((hotel) =>
-                    value && hotel?.name?.includes(value)
-                );
-                setResults(results);
-                setSearched(true);
-            });
-    };
+    const filteredResults = useMemo(() => {
+        if (!search.trim()) return [];
+        return hotels.filter((hotel) =>
+            hotel?.name?.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [search, hotels]);
 
     const handleSearch = () => {
         if (search.trim() === "") {
             setSearched(false);
-            setResults([]);
-            return;
+        } else {
+            setSearched(true);
         }
-        fetchData(search);
     };
 
     return (
@@ -47,7 +42,6 @@ const ManageHotels = () => {
                                 setSearch(e.target.value);
                                 if (e.target.value.trim() === "") {
                                     setSearched(false);
-                                    setResults([]);
                                 }
                             }}
                             onKeyDown={(e) => {
@@ -65,7 +59,7 @@ const ManageHotels = () => {
                         <button className='hover:bg-gray-100 p-2 rounded-full' onClick={() => navigate('/admin/manage-hotels/create-hotel')}>
                             <IoMdAddCircleOutline className='text-[28px] text-green-400' />
                         </button>
-                        <button className='hover:bg-gray-100 p-2 rounded-full'>
+                        <button className='hover:bg-gray-100 p-2 rounded-full' onClick={refetch}>
                             <IoMdRefresh className='text-[28px] text-gray-400' />
                         </button>
                     </div>
@@ -74,14 +68,13 @@ const ManageHotels = () => {
                 {/* Results */}
                 <div className='mt-4 p-4'>
                     {searched ? (
-                        results.length > 0 ? (
+                        filteredResults.length > 0 ? (
                             <>
                                 <p className='font-semibold text-[16px]'>Kết quả tìm kiếm</p>
                                 <ul className='mt-2 space-y-2'>
-                                    {results.map((user) => (
-                                        <li key={user.id} className='border-b border-gray-300 pb-2'>
-                                            <p className='text-[14px] font-medium'>{user.name}</p>
-                                            <p className='text-[12px] text-gray-500'>{user.email}</p>
+                                    {filteredResults.map((hotel) => (
+                                        <li key={hotel._id} className='border-b border-gray-300 pb-2'>
+                                            <p className='text-[14px] font-medium'>{hotel.name}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -90,7 +83,16 @@ const ManageHotels = () => {
                             <p className='text-[14px] font-medium text-gray-500'>Không tìm thấy</p>
                         )
                     ) : (
-                        <p className='text-[14px] font-medium text-gray-500'>Danh sách tất cả khách sạn</p>
+                        <>
+                            <p className='text-[14px] font-medium text-gray-500'>Danh sách tất cả khách sạn</p>
+                            <ul className='mt-2 space-y-2'>
+                                {hotels.map((hotel) => (
+                                    <li key={hotel._id} className='border-b border-gray-300 pb-2'>
+                                        <p className='text-[14px] font-medium'>{hotel.name}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
                     )}
                 </div>
             </div>
