@@ -1,125 +1,125 @@
 import React, { useState } from "react";
 import { Modal, Select } from "antd";
+import { useForm, Controller } from "react-hook-form";
+import FormInput from "./FormInput";
+import FormSelect from "./FormSelect";
 const { Option } = Select;
 
 
-const RoomTypeModal = ({ visible, onCancel, onOk, roomTypeData = {} }) => {
-  const [name, setName] = useState(roomTypeData.name || "");
-  const [area, setArea] = useState(roomTypeData.area || 0);
-  const [view, setView] = useState(roomTypeData.view || "");
-  const [facility, setFacility] = useState(roomTypeData.facility || []);
-  const [showRoomTypeError, setShowRoomTypeError] = useState(false);
+const RoomTypeModal = ({
+  visible,
+  onCancel,
+  onAddRoomType,
+  onUpdateRoomType,
+  editingRoomType,
+}) => {
 
-  const handleSelectChange = (value) => {
-    setFacility(value);
-  };
-
-  const resetForm = () => {
-    setName("");
-    setArea(0);
-    setView("");
-    setFacility([]);
-    setShowRoomTypeError(false);
-  }
-
-  const renderRoomError = () => {
-    return <p className="text-red-500">Vui lòng điền đầy đủ thông tin</p>;
-  }
-
-  const handleSubmit = () => {
-
-    if (name.trim() === "" || area === 0 || view === "" || facility == null) {
-      setShowRoomTypeError(true);
-      return;
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+    setValue,
+    getValues,
+  } = useForm({
+    defaultValues: editingRoomType || {
+      name: "",
+      area: "",
+      view: "",
+      roomFacilities: [],
+      rooms: []
     }
+  })
 
-    const newRoomType = {
-      name: name,
-      area: area,
-      view: view,
-      roomFacilities: facility,
-    };
-    onOk(newRoomType);
-    resetForm();
-  };
-
-  const handleCancel = () => {
-    resetForm();
-    onCancel();
-  }
-  
-
-  const cityOptions = [
-    { value: "TP HCM", label: "TP HCM" },
-    { value: "Hà Nội", label: "Hà Nội" },
+  const roomFacilityOptions = [
+    { _id: "Không hút thuốc", name: "Không hút thuốc" },
+    { _id: "TV", name: "TV" },
+    { _id: "Tủ lạnh", name: "Tủ lạnh" },
+    { _id: "Quầy bar mini", name: "Quầy bar mini" },
+    { _id: "Số điện thoại", name: "Số điện thoại" },
+    { _id: "Ban công", name: "Ban công" },
+    { _id: "Vòi sen", name: "Vòi sen" },
+    { _id: "Dụng cụ vệ sinh cá nhân", name: "Dụng cụ vệ sinh cá nhân" },
+    { _id: "Máy sấy tóc", name: "Máy sấy tóc" },
+    { _id: "Điều hòa", name: "Điều hòa" },
+    { _id: "Bàn ủi & cầu là", name: "Bàn ủi & cầu là" },
+    { _id: "Két bảo hiểm", name: "Két bảo hiểm" },
+    { _id: "Nước đóng chai miễn phí", name: "Nước đóng chai miễn phí" },
+  ];
+  const viewOptions = [
+    { _id: "Tầm nhìn hướng thành phố", name: "Tầm nhìn hướng thành phố" },
+    { _id: "Tầm nhìn hướng biển", name: "Tầm nhìn hướng biển" },
   ];
 
+  const onSubmit = (newRoomType) => {
+    if (editingRoomType){
+      onUpdateRoomType(newRoomType)
+    }
+    else {
+      onAddRoomType(newRoomType)
+    }
+  }
+
   return (
-    <Modal open={visible} onCancel={handleCancel} onOk={handleSubmit}>
+    <Modal
+      open={visible}
+      onCancel={onCancel}
+      width={"50%"}
+      footer={null}
+    >
       <p className="text-[18px] font-semibold mb-3">Thêm loại phòng</p>
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[16px]">
-          Tên loại phòng
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px]"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          label={"Tên loại phòng"}
+          name={"name"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập tên loại phòng"}
+          className="mb-3"
+          // validationRules = {{required: "Tên là bắt buộc"}}
         />
-      </div>
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[16px] mr-2">
-          Diện tích (m²)
-          <span className="text-red-500">*</span>
-        </label>
-        <input
+        <FormInput
+          label={"Diện tích (m²)"}
           type="number"
-          value={area}
-          onChange={(e) => {
-            setArea(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px]"
+          name={"area"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập diện tích phòng"}
+          className="mb-3"
+          // validationRules = {{required: "Diện tích là bắt buộc"}}
         />
-      </div>
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[16px] mr-2">
-          Hướng phòng
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={view}
-          onChange={(e) => {
-            setView(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px]"
+        <FormSelect
+          label={"Hướng phòng"}
+          name={"view"}
+          control={control}
+          placeholder={"Chọn tầm nhìn"}
+          isMultiple={false}
+          options={viewOptions}
+          errors={errors}
+          className="mb-3"
         />
-      </div>
-      <div className="mb-5">
-        <label className="text-[16px] mr-2">
-          Cơ sở vật chất phòng
-          <span className="text-red-500">*</span>
-        </label>
-        <Select
-          value={facility}
-          mode="multiple"
-          onChange={(value) => handleSelectChange(value)}
-          placeholder="Chọn cơ sở vật chất"
-          size="large"
-          className="w-full border border-gray-300 rounded"
-        >
-          {cityOptions.map((city) => (
-            <Option key={city.value} value={city.value}>
-              {city.label}
-            </Option>
-          ))}
-        </Select>
-      </div>
-      {showRoomTypeError && renderRoomError()}
+        <FormSelect
+          label={"Cơ sở vật chất phòng"}
+          name={"roomFacilities"}
+          control={control}
+          placeholder={"Chọn cơ sở vật chất phòng"}
+          isMultiple={true}
+          options={roomFacilityOptions}
+          errors={errors}
+          className="mb-3"
+        />
+
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded"
+          >
+            {editingRoomType ? "Sửa loại phòng" : "Thêm loại phòng" }
+            
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

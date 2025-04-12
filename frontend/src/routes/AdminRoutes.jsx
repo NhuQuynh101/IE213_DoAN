@@ -20,6 +20,7 @@ const AdminRoutes = ({ isAdmin }) => {
             >
                 <Route element={<AdminLayout></AdminLayout>}>
                     <Route path="admin/profile" element={<Profile />} />
+
                     <Route path="admin/manage-tours">
                         <Route
                             index
@@ -30,6 +31,7 @@ const AdminRoutes = ({ isAdmin }) => {
                             element={<CreateTour></CreateTour>}
                         ></Route>
                     </Route>
+                    
                     <Route path="admin/manage-hotels">
                         <Route
                             index

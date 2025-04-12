@@ -10,7 +10,7 @@ const customIcon = new L.Icon({
     iconAnchor: [12, 41]
 });
 
-const MapPicker = ({ form }) => {
+const MapPicker = ({ form, validationRules = {} }) => {
     const [location, setLocation] = useState(() => {
         const lat = parseFloat(form.getValues("lat")) || 21.0285;
         const lng = parseFloat(form.getValues("lng")) || 105.8542;
@@ -60,13 +60,15 @@ const MapPicker = ({ form }) => {
             <div className="mb-3">
                 <label className='font-medium'>
                     Địa chỉ
-                    <span className="text-red-500">*</span>
+                    {validationRules.required && (
+                        <span className="text-red-500">*</span>
+                    )}
                 </label>
                 <div className='flex'>
                     <input
                         type="text"
                         placeholder="Nhập địa chỉ..."
-                        {...form.register("address", { required: "Địa chỉ là bắt buộc" })}
+                        {...form.register("address", validationRules)}
                         className={`flex-1 mr-4 border p-2 rounded ${
                             form.errors['address'] ? "border-red-500" : "border-gray-300"
                         }`}

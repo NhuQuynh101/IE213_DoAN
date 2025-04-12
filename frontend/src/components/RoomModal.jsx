@@ -1,227 +1,172 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Select } from "antd";
+import FormInput from "./FormInput";
+import { useForm, Controller } from "react-hook-form";
+import FormSelect from "./FormSelect";
 const { Option } = Select;
 
-const RoomModal = ({ visible, onCancel, onOk, roomData = {} }) => {
-  const [bedType, setBedType] = useState(roomData.bedType || "");
-  const [serveBreakfast, setServeBreakfast] = useState(roomData.serveBreakfast || "");
-  const [maxOfGuest, setMaxOfGuest] = useState(roomData.maxOfGuest || 0);
-  const [numberOfRoom, setNumberOfRoom] = useState(roomData.numberOfRoom || 0);
-  const [price, setPrice] = useState(roomData.price || 0);
-  const [cancellationPolicy, setCancellationPolicy] = useState(roomData.cancellationPolicy || {
-    refund: "",
-    day: "",
-    percentBeforeDay: "",
-    percentAfterDay: ""
-  });
-  const [showRoomError, setShowRoomError] = useState(false);
+const Options = [
+  { _id: "Bao gồm bữa sáng", name: "Bao gồm bữa sáng" },
+  { _id: "Không phục vụ bữa sáng", name: "Không phục vụ bữa sáng" },
+];
 
-  const resetForm = () => {
-    setBedType("");
-    setServeBreakfast("");
-    setMaxOfGuest(0);
-    setNumberOfRoom(0);
-    setPrice(0);
-    setCancellationPolicy({
-      refund: "",
-      day: "",
-      percentBeforeDay: "",
-      percentAfterDay: ""
-    });
-    setShowRoomError(false);
-  };
+const refundOptions = [
+  { _id: "Không hoàn tiền", name: "Không hoàn tiền" },
+  { _id: "Hoàn tiền", name: "Hoàn tiền" },
+];
 
-  const renderRoomError = () => {
-    if (bedType.trim() === "" || maxOfGuest === 0 || price === 0 || numberOfRoom === 0) {
-      return <p className="text-red-500">Vui lòng điền đầy đủ thông tin</p>;
-    }
-  }
-
-  const handleSubmit = () => {
-    
-    if (bedType.trim() === "" || maxOfGuest === 0 || numberOfRoom === 0 || price === 0) {
-      setShowRoomError(true);
-      return;
-    }
-    
-    const newRoom = {
-      bedType: bedType,
-      serveBreakfast: serveBreakfast,
-      maxOfGuest: maxOfGuest,
-      numberOfRoom: numberOfRoom,
-      price: price,
+const RoomModal = ({
+  visible,
+  onCancel,
+  onAddRoom,
+  onUpdateRoom,
+  editingRoom
+}) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+    setValue,
+    getValues,
+  } = useForm({
+    defaultValues: editingRoom || {
+      bedType: "",
+      serveBreakfast: "",
+      maxOfGuest: "",
+      numberOfRoom: "",
       cancellationPolicy: {
-        refund: cancellationPolicy.refund,
-        day: cancellationPolicy.day,
-        percentBeforeDay: cancellationPolicy.percentBeforeDay,
-        percentAfterDay: cancellationPolicy.percentAfterDay,
+        refund: "",
+        day: undefined,
+        percentBeforeDay: undefined,
+        percentAfterDay: undefined,
       },
-    };
-    onOk(newRoom);
-    resetForm();
-  }
+      price: undefined
+    }
+  })
 
-  const handleCancel = () => {
-    resetForm();
-    onCancel();
+  const onSubmit = (newRoom) => {
+    if (editingRoom){
+      onUpdateRoom(newRoom);
+    }
+    else{
+      onAddRoom(newRoom)
+      console.log(newRoom)
+    }
   }
 
   return (
-    <Modal open={visible} onCancel={handleCancel} onOk={handleSubmit}>
+    <Modal
+      open={visible}
+      width={"50%"}
+      footer={null}
+      onCancel={onCancel}
+    >
       <p className="text-[18px] font-semibold mb-3">Thêm phòng</p>
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Tên phòng
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={bedType}
-          onChange={(e) => {
-            setBedType(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px]"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          label={"Tên phòng"}
+          name={"bedType"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập tên phòng"}
+          // validationRules={{required: "Tên phòng là bắt buộc"}}
         />
-      </div>
-      <div className="mb-3 flex items-center gap-3">
-        <label className="min-w-fit">Bữa sáng</label>
-        <div className="border rounded border-gray-300 w-full ml-2">
-          <Select
-            value={serveBreakfast}
-            onChange={(value) => setServeBreakfast(value)}
-            placeholder="Chọn"
-            size="medium"
-            style={{ width: "100%" }} // tuỳ bạn set chiều rộng ở đây
+        
+        <FormSelect
+          label={"Bữa sáng"}
+          name={"serveBreakfast"}
+          control={control}
+          options={Options}
+          placeholder={"Chọn dịch vụ bữa sáng"}
+          // validationRules={{required: "Dịch vụ bữa sáng là bắt buộc"}}
+          errors={errors}
+        />
+
+        <FormInput
+          label={"Số khách tối đa"}
+          type="number"
+          name={"maxOfGuest"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập số khách tối đa"}
+          // validationRules={{required: "Số khách là bắt buộc"}}
+        />
+
+        <FormInput
+          label={"Số lượng phòng"}
+          type="number"
+          name={"numberOfRoom"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập số phòng tối đa"}
+          // validationRules={{required: "Số phòng là bắt buộc"}}
+        />
+
+        <FormInput
+          label={"Giá phòng (VND)"}
+          type="number"
+          name={"price"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập giá phòng"}
+          // validationRules={{required: "Giá phòng là bắt buộc"}}
+        />
+
+        <p className="text-[16px] font-semibold mb-2 mt-5">
+          Chính sách huỷ phòng
+        </p>
+
+        <div className="mb-3 flex items-center gap-3">
+          <FormSelect
+            label={"Hoàn tiền"}
+            name={"cancellationPolicy.refund"}
+            control={control}
+            options={refundOptions}
+            placeholder={"Lựa chọn hoàn tiền"}
+            errors={errors}
+            className="flex-1"
+          />
+        </div>
+
+        <FormInput
+          label={"Số ngày trước khi huỷ"}
+          type="number"
+          name={"cancellationPolicy.day"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập số ngày"}
+        />
+
+        <FormInput
+          label={"Phần trăm hoàn trước số ngày đó"}
+          type="number"
+          name={"cancellationPolicy.percentBeforeDay"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập số %"}
+        />
+
+        <FormInput
+          label={"Phần trăm hoàn sau số ngày đó"}
+          type="number"
+          name={"cancellationPolicy.percentAfterDay"}
+          register={register}
+          errors={errors}
+          placeholder={"Nhập số %"}
+        />
+
+        <div className="flex justify-end mt-3">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded"
           >
-            <Option value="Không phục vụ bữa sáng">
-              Không phục vụ bữa sáng
-            </Option>
-            <Option value="Bao gồm bữa sáng">Bao gồm bữa sáng</Option>
-          </Select>
+            {editingRoom ? "Sửa phòng" : "Thêm phòng" }
+            
+          </button>
         </div>
-      </div>
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Số khách tối đa
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          value={maxOfGuest}
-          onChange={(e) => {
-            setMaxOfGuest(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px] ml-2"
-        />
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Số lượng phòng
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          value={numberOfRoom}
-          onChange={(e) => {
-            setNumberOfRoom(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px] ml-2"
-        />
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Giá phòng (VND)
-          <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => {
-            setPrice(e.target.value);
-          }}
-          className="flex-1 border border-gray-300 rounded p-[5px]"
-        />
-      </div>
-
-      <p className="text-[16px] font-semibold mb-2 mt-5">
-        Chính sách huỷ phòng
-      </p>
-
-      <div className="mb-3 flex items-center gap-3">
-        <label className="min-w-fit">Hoàn tiền</label>
-        <div className="border rounded border-gray-300 w-full ml-2">
-          <Select
-            value={cancellationPolicy.refund}
-            onChange={(value) =>
-              setCancellationPolicy({ ...cancellationPolicy, refund: value })
-            }
-            placeholder="Chọn"
-            size="medium"
-            style={{ width: "100%" }}
-          >
-            <Option value="Có hoàn tiền">Có hoàn tiền</Option>
-            <Option value="Không hoàn tiền">Không hoàn tiền</Option>
-          </Select>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Số ngày trước khi huỷ
-        </label>
-        <input
-          type="number"
-          value={cancellationPolicy.day || ""}
-          onChange={(e) =>
-            setCancellationPolicy({
-              ...cancellationPolicy,
-              day: e.target.value,
-            })
-          }
-          className="flex-1 border border-gray-300 rounded p-[5px]"
-        />
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Phần trăm hoàn trước số ngày đó
-        </label>
-        <input
-          type="number"
-          value={cancellationPolicy.percentBeforeDay || ""}
-          onChange={(e) =>
-            setCancellationPolicy({
-              ...cancellationPolicy,
-              percentBeforeDay: e.target.value,
-            })
-          }
-          className="flex-1 border border-gray-300 rounded p-[5px]"
-        />
-      </div>
-
-      <div className="flex items-center gap-3 mb-3">
-        <label className="text-[14px]">
-          Phần trăm hoàn sau số ngày đó
-        </label>
-        <input
-          type="number"
-          value={cancellationPolicy.percentAfterDay || ""}
-          onChange={(e) =>
-            setCancellationPolicy({
-              ...cancellationPolicy,
-              percentAfterDay: e.target.value,
-            })
-          }
-          className="flex-1 border border-gray-300 rounded p-[5px] ml-3"
-        />
-      </div>
-      {showRoomError && (
-        <div className="mt-3">
-          {renderRoomError()}
-        </div>
-      )}
+      </form>
     </Modal>
   );
 };

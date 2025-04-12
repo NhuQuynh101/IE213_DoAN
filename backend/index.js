@@ -61,7 +61,7 @@ app.use("/api/facility", facilityRoute);
 app.use("/api/city", cityRoute);
 app.use("api/tour", tourRoute);
 app.use("/api/hotel", hotelRoute);
-app.use("/api/upload", updateRoute);
+app.use("/api/img", updateRoute);
 
 app.listen(port, () =>
     console.log(`🚀 Server đang chạy tại http://localhost:${port}`)

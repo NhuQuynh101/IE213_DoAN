@@ -25,7 +25,6 @@ const FormSelect = ({
                 )}
             </label>
             <Controller
-            
                 name={name}
                 control={control}
                 rules={validationRules}

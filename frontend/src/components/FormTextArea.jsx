@@ -22,7 +22,7 @@ const FormTextArea = ({
                 )}
             </label>
             <textarea
-                row={row}
+                rows={row}
                 placeholder={placeholder}
                 {...register(name, validationRules)}
                 className={`w-full border p-2 rounded ${
